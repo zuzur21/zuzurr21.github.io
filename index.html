@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Gusto | Творческое кафе в Лысково</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0a0a0a;
+            color: #f0ede8;
+            overflow-x: hidden;
+        }
+
+        /* Анимированный градиентный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(230,126,34,0.08) 0%, rgba(10,10,10,1) 70%);
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, rgba(230,126,34,0.02) 0px, rgba(230,126,34,0.02) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Стеклянный хедер */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(230,126,34,0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid rgba(230,126,34,0.6);
+        }
+
+        .header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .logo {
+            position: relative;
+        }
+
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e67e22, #ffd89b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .logo p {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #e67e22;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-link {
+            color: #f0ede8;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #e67e22, #ffd89b);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .btn-phone {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            padding: 10px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(230,126,34,0.3);
+        }
+
+        .btn-phone:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(230,126,34,0.5);
+        }
+
+        /* Анимированные секции */
+        .page-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero секция с параллаксом */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #fff, #e67e22);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            padding: 14px 36px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e67e22;
+            padding: 12px 34px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #e67e22;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-primary:hover, .btn-outline:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(230,126,34,0.4);
+        }
+
+        /* Плавающие элементы */
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .float {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(230,126,34,0.2), rgba(255,216,155,0.1));
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(180deg); }
+        }
+
+        /* Секции */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #e67e22);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: #999;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+        }
+
+        /* Карточки преимуществ с 3D эффектом */
+        .features {
+            padding: 100px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: rgba(30, 30, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(230,126,34,0.2);
+            border-radius: 30px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(230,126,34,0.6);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-card i {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #e67e22, #ffd89b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+        }
+
+        /* Акции с неоновым эффектом */
+        .specials {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(230,126,34,0.05), rgba(10,10,10,0));
+        }
+
+        .specials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .special-card {
+            background: rgba(30, 30, 35, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+            border: 1px solid rgba(230,126,34,0.3);
+        }
+
+        .special-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(230,126,34,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .special-card:hover::before {
+            left: 100%;
+        }
+
+        .special-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Меню с нестандартной сеткой */
+        .menu-full {
+            padding: 100px 0;
+        }
+
+        .menu-category {
+            margin-bottom: 80px;
+        }
+
+        .menu-category h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            display: inline-block;
+            background: linear-gradient(135deg, #e67e22, #ffd89b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .menu-card {
+            background: rgba(30, 30, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(230,126,34,0.2);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(230,126,34,0.6);
+            box-shadow: 0 15px 35px rgba(230,126,34,0.2);
+        }
+
+        .menu-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: 0.4s;
+        }
+
+        .menu-card:hover .menu-img {
+            transform: scale(1.05);
+        }
+
+        .menu-info {
+            padding: 25px;
+        }
+
+        .menu-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: #e67e22;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* Контакты с необычной формой */
+        .contacts-page {
+            padding: 100px 0;
+        }
+
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(30, 30, 35, 0.4);
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .contact-item:hover {
+            background: rgba(30, 30, 35, 0.8);
+            transform: translateX(10px);
+        }
+
+        .contact-item i {
+            font-size: 2.5rem;
+            color: #e67e22;
+        }
+
+        .contact-form {
+            background: rgba(30, 30, 35, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(230,126,34,0.3);
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            background: rgba(20, 20, 25, 0.8);
+            border: 1px solid rgba(230,126,34,0.3);
+            border-radius: 12px;
+            color: white;
+            font-family: inherit;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #e67e22;
+        }
+
+        /* Карта с креативом */
+        .map-container {
+            margin-top: 60px;
+        }
+
+        .map-placeholder {
+            background: linear-gradient(135deg, #1a1a1f, #0a0a0a);
+            padding: 50px;
+            border-radius: 30px;
+            text-align: center;
+            border: 2px dashed rgba(230,126,34,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder::after {
+            content: '📍';
+            position: absolute;
+            font-size: 100px;
+            opacity: 0.05;
+            bottom: -30px;
+            right: -30px;
+            transform: rotate(-15deg);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0a0a0a, #050505);
+            padding: 60px 0 30px;
+            border-top: 1px solid rgba(230,126,34,0.2);
+            margin-top: 60px;
+        }
+
+        .footer-flex {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-col h3, .footer-col h4 {
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+
+        .footer-col i {
+            margin-right: 10px;
+            color: #e67e22;
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-flex {
+                flex-direction: column;
+            }
+            .nav-links {
+                gap: 25px;
+            }
+        }
+
+        /* Счетчик гостей */
+        .guest-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            z-index: 100;
+            border-left: 3px solid #e67e22;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<header id="header">
+    <div class="container header-flex">
+        <div class="logo">
+            <h1>Gusto</h1>
+            <p>ART & GASTRONOMY</p>
+        </div>
+        <nav class="nav-links">
+            <a class="nav-link active" data-page="home">Главная</a>
+            <a class="nav-link" data-page="menu">Меню</a>
+            <a class="nav-link" data-page="contacts">Контакты</a>
+        </nav>
+        <a href="tel:+79991414149" class="btn-phone"><i class="fas fa-phone-alt"></i> 8-999-14-14-14-9</a>
+    </div>
+</header>
+
+<!-- Главная -->
+<section id="page-home" class="page-section active">
+    <div class="hero">
+        <div class="floating-elements">
+            <div class="float" style="width: 200px; height: 200px; top: 10%; left: -50px; animation-duration: 15s;"></div>
+            <div class="float" style="width: 150px; height: 150px; bottom: 20%; right: -30px; animation-duration: 25s;"></div>
+            <div class="float" style="width: 100px; height: 100px; top: 50%; left: 20%; animation-duration: 18s;"></div>
+        </div>
+        <div class="container hero-content">
+            <h2>Вкус, который<br><span style="color:#e67e22;">вдохновляет</span></h2>
+            <p>Домашняя атмосфера, авторские блюда и искренняя забота о каждом госте. Ждём вас в центре Лысково.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary nav-link" data-page="menu">Изучить меню</button>
+                <button class="btn-outline nav-link" data-page="contacts">Забронировать стол</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="container">
+            <h2 class="section-title">Почему Gusto?</h2>
+            <p class="section-sub">Создаём моменты, которые хочется повторять</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-chef-hat"></i>
+                    <h3>Шеф-повар из Италии</h3>
+                    <p>Аутентичные рецепты и авторский подход к каждому блюду</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-seedling"></i>
+                    <h3>Фермерские продукты</h3>
+                    <p>Только свежие и натуральные ингредиенты от местных поставщиков</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-wine-bottle"></i>
+                    <h3>Винная карта</h3>
+                    <p>Более 50 позиций вин из Европы и Нового Света</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="specials">
+        <div class="container">
+            <h2 class="section-title">🔥 Особые предложения</h2>
+            <p class="section-sub">Только для наших гостей</p>
+            <div class="specials-grid">
+                <div class="special-card">
+                    <div class="special-tag">-20%</div>
+                    <h3>Бизнес-ланч</h3>
+                    <p style="margin: 15px 0;">Пн–Пт с 12:00 до 16:00</p>
+                    <span class="price-old" style="text-decoration: line-through; color:#999;">450₽</span>
+                    <span style="font-size: 1.8rem; color:#e67e22; font-weight:bold;">360₽</span>
+                </div>
+                <div class="special-card">
+                    <div class="special-tag">Подарок</div>
+                    <h3>День рождения</h3>
+                    <p style="margin: 15px 0;">Десерт в подарок + скидка 10% на весь счёт</p>
+                    <span style="color:#e67e22;">🎂 При предъявлении паспорта</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Меню -->
+<section id="page-menu" class="page-section">
+    <div class="menu-full">
+        <div class="container">
+            <h2 class="section-title">Наше меню</h2>
+            <p class="section-sub">Сезонные блюда и вечная классика</p>
+            
+            <div class="menu-category">
+                <h2><i class="fas fa-fire"></i> Signature блюда</h2>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <img class="menu-img" src="https://images.unsplash.com/photo-1546833999-b9f581a4b095?w=600&h=400&fit=crop" alt="Стейк">
+                        <div class="menu-info">
+                            <div class="menu-title">Стейк Рибай <span class="price">890₽</span></div>
+                            <div class="menu-desc">Мраморная говядина, картофель гратен, соус демиглас</div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <img class="menu-img" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&h=400&fit=crop" alt="Паста">
+                        <div class="menu-info">
+                            <div class="menu-title">Паста Карбонара <span class="price">490₽</span></div>
+                            <div class="menu-desc">Бекон, пармезан, сливочный соус, яйцо пашот</div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <img class="menu-img" src="https://images.unsplash.com/photo-1513442542250-854d436a73f2?w=600&h=400&fit=crop" alt="Утка">
+                        <div class="menu-info">
+                            <div class="menu-title">Утиная ножка конфи <span class="price">750₽</span></div>
+                            <div class="menu-desc">Клюквенный соус, запечённый картофель, тимьян</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-category">
+                <h2><i class="fas fa-leaf"></i> Салаты & Закуски</h2>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <img class="menu-img" src="https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=600&h=400&fit=crop" alt="Цезарь">
+                        <div class="menu-info">
+                            <div class="menu-title">Цезарь с креветками <span class="price">520₽</span></div>
+                            <div class="menu-desc">Тигровые креветки, пармезан, соус Цезарь</div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <img class="menu-img" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop" alt="Греческий">
+                        <div class="menu-info">
+                            <div class="menu-title">Греческий салат <span class="price">380₽</span></div>
+                            <div class="menu-desc">Фета, маслины, огурец, перец, красный лук</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-category">
+                <h2><i class="fas fa-mug-hot"></i> Десерты</h2>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <img class="menu-img" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&h=400&fit=crop" alt="Тирамису">
+                        <div class="menu-info">
+                            <div class="menu-title">Тирамису <span class="price">290₽</span></div>
+                            <div class="menu-desc">Классический десерт с маскарпоне и кофе</div>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <img class="menu-img" src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&h=400&fit=crop" alt="Чизкейк">
+                        <div class="menu-info">
+                            <div class="menu-title">Чизкейк Нью-Йорк <span class="price">320₽</span></div>
+                            <div class="menu-desc">С ягодным кули и взбитыми сливками</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Контакты -->
+<section id="page-contacts" class="page-section">
+    <div class="contacts-page">
+        <div class="container">
+            <h2 class="section-title">Свяжитесь с нами</h2>
+            <p class="section-sub">Всегда рады новым гостям и вопросам</p>
+            
+            <div class="contacts-grid">
+                <div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>Адрес</h3>
+                            <p><strong>606210, Лысково, Звездная улица, 8</strong><br>Фактический адрес: тот же</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <h3>Телефон</h3>
+                            <p><a href="tel:+79991414149" style="color:#e67e22;">8-999-14-14-14-9</a><br>Бронь столов, доставка, вопросы</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h3>Email</h3>
+                            <p><a href="mailto:gustolyskovo@gmail.com" style="color:#e67e22;">gustolyskovo@gmail.com</a><br>По всем вопросам и сотрудничеству</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3>Часы работы</h3>
+                            <p>Ежедневно: 11:00 – 23:00<br>Без перерыва</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <h3 style="margin-bottom: 25px;">📝 Быстрая связь</h3>
+                    <form action="#" method="post">
+                        <input type="text" placeholder="Ваше имя" required>
+                        <input type="email" placeholder="Email" required>
+                        <textarea rows="4" placeholder="Ваше сообщение..."></textarea>
+                        <button type="submit" class="btn-primary" style="width:100%;">Отправить →</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <i class="fas fa-location-dot" style="font-size: 3rem; color:#e67e22; margin-bottom: 20px;"></i>
+                    <h3>Как нас найти?</h3>
+                    <p style="margin: 15px 0;">📍 Лысково, ул. Звездная, 8<br>Остановка "Центральная", вход со двора<br>🅿️ Удобная парковка для гостей</p>
+                    <button class="btn-outline" onclick="window.open('https://yandex.ru/maps/?text=Лысково+Звездная+8','_blank')" style="cursor:pointer;">🗺️ Построить маршрут</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container footer-flex">
+        <div class="footer-col">
+            <h3>Gusto</h3>
+            <p>Кафе с душой в сердце Лысково</p>
+            <p style="margin-top: 15px;">© 2025 Все права защищены</p>
+        </div>
+        <div class="footer-col">
+            <h4>Контакты</h4>
+            <p><i class="fas fa-map-marker-alt"></i> Звездная 8, Лысково</p>
+            <p><i class="fas fa-phone"></i> 8-999-14-14-14-9</p>
+            <p><i class="fas fa-envelope"></i> gustolyskovo@gmail.com</p>
+        </div>
+        <div class="footer-col">
+            <h4>Мы в соцсетях</h4>
+            <p><i class="fab fa-instagram"></i> @gusto_lyskovo</p>
+            <p><i class="fab fa-vk"></i> vk.com/gusto</p>
+        </div>
+    </div>
+</footer>
+
+<div class="guest-counter">
+    <i class="fas fa-users" style="color:#e67e22;"></i> Гостей сегодня: 127
+</div>
+
+<script>
+    // Эффект скролла для хедера
+    window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Навигация между страницами
+    const sections = {
+        home: document.getElementById('page-home'),
+        menu: document.getElementById('page-menu'),
+        contacts: document.getElementById('page-contacts')
+    };
+    
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    function switchPage(pageId) {
+        Object.values(sections).forEach(section => {
+            if (section) section.classList.remove('active');
+        });
+        if (sections[pageId]) {
+            sections[pageId].classList.add('active');
+        }
+        navLinks.forEach(link => {
+            if (link.getAttribute('data-page') === pageId) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = link.getAttribute('data-page');
+            if (page) switchPage(page);
+        });
+    });
+
+    // Плавное появление элементов при скролле
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature-card, .menu-card, .contact-item').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'all 0.6s ease';
+        observer.observe(el);
+    });
+</script>
+</body>
+</html>
